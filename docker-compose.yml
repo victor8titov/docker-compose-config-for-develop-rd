@@ -3,13 +3,12 @@ version: "3.9"
 services: 
 
   postgres:
-    image: postgres_custom_image
     container_name: postgres_container
-    build:
-      context: ./postgres
-      dockerfile: Dockerfile.postgres
+    image: postgres:12.8
     environment:
-        POSTGRES_PASSWORD: postgres
+        POSTGRES_USER: "${POSTGRES_USER}"
+        POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+        POSTGRES_DB: "${POSTGRES_DB}"
     ports:
       - "5432:5432"
     volumes:
@@ -19,10 +18,12 @@ services:
     container_name: pgadmin_container
     image: dpage/pgadmin4:latest
     environment:
-      PGADMIN_DEFAULT_EMAIL: victor8titov@yandex.ru
-      PGADMIN_DEFAULT_PASSWORD: postgres
+      PGADMIN_DEFAULT_EMAIL: "${PGADMIN_DEFAULT_EMAIL}"
+      PGADMIN_DEFAULT_PASSWORD: "${PGADMIN_DEFAULT_PASSWORD}"
     ports: 
       - "81:80"
+    volumes:
+      - rd_pgadmin_volume:/var/lib/pgadmin
     depends_on: 
       - postgres
   
@@ -34,3 +35,4 @@ services:
 
 volumes: 
   rd_postgres_volume:
+  rd_pgadmin_volume:

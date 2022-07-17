@@ -1,0 +1,36 @@
+version: "3.9"
+
+services: 
+
+  postgres:
+    image: postgres_custom_image
+    container_name: postgres_container
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile.postgres
+    environment:
+        POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - rd_postgres_volume:/var/lib/postgresql/data
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: victor8titov@yandex.ru
+      PGADMIN_DEFAULT_PASSWORD: postgres
+    ports: 
+      - "81:80"
+    depends_on: 
+      - postgres
+  
+  redis:
+    container_name: redis_container
+    image: redislabs/rejson:latest
+    ports:
+      - "6379:6379"
+
+volumes: 
+  rd_postgres_volume:
